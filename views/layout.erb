@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My First App</title>
+    <title>Sinatra Blackjack</title>
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/application.css">
   </head>
@@ -11,16 +11,26 @@
       <div class="navbar-inner">
         <div class="container">
             <ul class="nav">
-              <li><a href="/">Nav Item</a></li>
+              <li><a href="/new_player">Start New Game</a></li>
+              <li><a href="/game_over">End Game</a></li>
             </ul>
         </div>
       </div>
     </div>
 
   <div class="container">
-    <%if @error %>
-      <div class="alert alert-error"><%=@error%></div>
+    <% if @error %>
+      <div class="alert alert-error"><%= @error %></div>
     <% end %>
+
+    <% if @success %>
+      <div class="alert alert-success"><%= @success %></div>
+    <% end %>
+
+    <% if @info %>
+      <div class="alert alert-info"><%= @info %></div>
+    <% end %>
+
       <%= yield %>
   </div>
   </body>
