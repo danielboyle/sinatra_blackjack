@@ -1,8 +1,6 @@
 require 'rubygems'
 require 'sinatra'
 
-SUITS = [ "S", "H", "D", "C" ]
-FACE_VALUES = [ "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" ]
 BLACKJACK_AMOUNT = 21
 DEALER_MIN_HIT = 17
 
@@ -98,9 +96,12 @@ post '/new_player' do
 end
 
 get '/game' do
+  suits = [ "S", "H", "D", "C" ]
+  face_values = [ "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" ]
+
   session[:turn] = session[:player_name]
 
-  session[:deck] = SUITS.product(FACE_VALUES).shuffle!
+  session[:deck] = suits.product(face_values).shuffle!
 
   session[:dealer_cards] = []
   session[:player_cards] = []
