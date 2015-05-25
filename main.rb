@@ -55,20 +55,20 @@ helpers do
     @play_again = true
     @show_hit_or_stay_buttons = false
     session[:player_stack] = session[:player_stack] + session[:player_bet]
-    @success = "<strong>#{session[:player_name]} wins!</strong> #{msg}"
+    @winner = "<strong>#{session[:player_name]} wins!</strong> #{msg}"
   end
 
   def loser!(msg)
     @play_again = true
     @show_hit_or_stay_buttons = false
     session[:player_stack] = session[:player_stack] - session[:player_bet]
-    @error = "<strong>#{session[:player_name]} loses.</strong> #{msg}"
+    @loser = "<strong>#{session[:player_name]} loses.</strong> #{msg}"
   end
 
-  def tie!(msg)
+  def push!(msg)
     @play_again = true
     @show_hit_or_stay_buttons = false
-    @info = "<strong>It's a push.</strong> #{msg}"
+    @push = "<strong>It's a push.</strong> #{msg}"
   end
 end
 
@@ -136,12 +136,6 @@ get '/game' do
   session[:dealer_cards] << session[:deck].pop
   session[:player_cards] << session[:deck].pop
 
-  if calculate_total(session[:player_cards]) == BLACKJACK_AMOUNT
-    @success = "#{session[:player_name]} has BLACKJACK!"
-    @show_hit_or_stay_buttons = false
-    @show_dealer_turn_button = true
-  end
-
   erb :game
 end
 
@@ -152,13 +146,13 @@ post '/game/player/hit' do
   if player_total == BLACKJACK_AMOUNT
     @success = "#{session[:player_name]} hit 21!"
     @show_hit_or_stay_buttons = false
-    @show_dealer_turn_button = true
+    redirect '/game/dealer'
   elsif player_total > BLACKJACK_AMOUNT
     loser!("Sorry, it looks like #{session[:player_name]} busted at #{player_total}.")
     @play_again
   end
 
-  erb :game
+  erb :game, layout: false
 end
 
 post '/game/player/stay' do
@@ -185,7 +179,7 @@ get '/game/dealer' do
     @show_dealer_hit_button = true
   end
 
-  erb :game
+  erb :game, layout: false
 end
 
 post '/game/dealer/hit' do
@@ -199,16 +193,16 @@ get '/game/compare' do
   dealer_total = calculate_total(session[:dealer_cards])
 
   if player_total == BLACKJACK_AMOUNT && dealer_total == BLACKJACK_AMOUNT
-    tie!("Both #{session[:player_name]} and the dealer hit 21! What are the odds?!")
+    push!("Both #{session[:player_name]} and the dealer hit 21! What are the odds?!")
   elsif player_total == dealer_total 
-    tie!("Both #{session[:player_name]} and the dealer have #{player_total}.")
+    push!("Both #{session[:player_name]} and the dealer have #{player_total}.")
   elsif player_total < dealer_total 
     loser!("#{session[:player_name]} has #{player_total}, and the dealer has #{dealer_total}.") 
   elsif player_total > dealer_total 
     winner!("#{session[:player_name]} has #{player_total}, and the dealer has #{dealer_total}.") 
   end
 
-  erb :game
+  erb :game, layout: false
 end
 
 get '/game_over' do
