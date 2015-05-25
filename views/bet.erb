@@ -1,0 +1,8 @@
+<h3>Place a bet for this round of action</h3>
+<h5> <%= session[:player_name] %> has $<%= session[:player_stack].to_i %> </h5>
+
+<form action='/bet' method='post'>
+  <input type="text" name="bet_amount" autofocus />
+  <br/>
+  <input type="submit" value="Place your bet"
+</form>

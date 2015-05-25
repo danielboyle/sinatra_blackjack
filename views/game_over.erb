@@ -1,4 +1,13 @@
-<h3>Thanks for playing!</h3>
-<p>Maybe it's time to head to Monte Carlo!</p>
+<% if session[:player_stack] == 0 %>
+  <h3>Looks like you're broke, <%= session[:player_name] %>.</h3>
+  <p>Please come back when you have more money!</p>
+<% else %>
+  <h3>Thanks for playing!</h3>
+  <% if session[:player_stack] > INITIAL_STACK_AMOUNT %>
+    <p>Maybe it's time to head to Monte Carlo!</p>
+  <% else %>
+    <p>Better luck next time!</p>
+  <% end %>
+<% end %>
 
 <p><a href="/new_player" class="btn btn-primary">Start Over</a></p>
